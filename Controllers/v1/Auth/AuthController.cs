@@ -2,7 +2,9 @@
 using JWT_ProductManager.Config;
 using JWT_ProductManager.Data;
 using JWT_ProductManager.Models;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JWT_ProductManager.Controllers.v1.Auth;
 
@@ -43,9 +45,28 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login()
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        // Login logic here
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (user == null)
+        {
+            return Unauthorized("Invalid email");
+        }
+
+        var passwordIsValid = user.Password == _utilities.EncryptSHA256(request.Password);
+
+        if (passwordIsValid == false)
+        {
+            return Unauthorized("Invalid password");
+        }
+
+        // we will create the JWT token
+
         return Ok("Login");
     }
 
