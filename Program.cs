@@ -1,4 +1,5 @@
 using DotNetEnv;
+using JWT_ProductManager.Config;
 using JWT_ProductManager.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.Parse("8.0.20-mysql")));
+
+builder.Services.AddSingleton<Utilities>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
