@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using JWT_ProductManager.Data;
 using JWT_ProductManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JWT_ProductManager.Controllers.v1.Products;
 
 [Route("api/v1/[controller]")]
+[Authorize]
 [ApiController]
 public class ProductsController : ControllerBase
 {
@@ -18,6 +20,7 @@ public class ProductsController : ControllerBase
 
     // GET: api/Products
     [HttpGet]
+
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
         return await _context.Products.ToListAsync();
